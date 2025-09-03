@@ -19,8 +19,10 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    // 👇 Si quieres mantener flexibilidad
     rules: {
-      "@typescript-eslint/no-explicit-any": "off", // 👈 desactiva el error de "any"
+      "@typescript-eslint/no-explicit-any": "warn", 
+      // con "warn" no falla el deploy, solo avisa en local
     },
   },
 ];
