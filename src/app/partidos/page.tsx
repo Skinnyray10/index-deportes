@@ -1,9 +1,21 @@
 "use client"
+
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabaseClient"
 
+// 🔹 Definimos el tipo de partido según tu tabla en Supabase
+type Partido = {
+  id: number
+  deporte: string
+  equipo1: string
+  equipo2: string
+  fecha: string
+  hora: string
+  lugar: string
+}
+
 export default function PartidosPage() {
-  const [partidos, setPartidos] = useState<any[]>([])
+  const [partidos, setPartidos] = useState<Partido[]>([])
   const [categoria, setCategoria] = useState("")
 
   const categorias = [
@@ -15,12 +27,14 @@ export default function PartidosPage() {
     "Fútbol 7x7 femenil",
   ]
 
+  // 🔎 Consultar partidos en Supabase
   useEffect(() => {
     const fetchData = async () => {
       let query = supabase.from("partidos").select("*").order("fecha", { ascending: true })
       if (categoria) query = query.eq("deporte", categoria)
       const { data, error } = await query
-      if (!error) setPartidos(data || [])
+
+      if (!error && data) setPartidos(data as Partido[])
     }
     fetchData()
   }, [categoria])
@@ -52,7 +66,7 @@ export default function PartidosPage() {
         ))}
       </div>
 
-      {/* 📋 Tabla */}
+      {/* 📋 Tabla de partidos */}
       {partidos.length > 0 ? (
         <table className="w-full border border-gray-300">
           <thead className="bg-gray-100">
